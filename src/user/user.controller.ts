@@ -7,25 +7,33 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiResponseType } from 'src/utils/response.util';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @ApiOperation({ summary: 'Create a user' })
+  @ApiOperation({ summary: 'Register a user' })
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created.',
   })
   @ApiResponse({ status: 400, description: 'Bad request.' })
-  @Post()
+  @Post('register')
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<ApiResponseType> {
@@ -37,6 +45,8 @@ export class UserController {
     status: 200,
     description: 'Users fetched successfully.',
   })
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth('access-token')
   @ApiQuery({ name: 'name', required: true, type: String })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @Get()

@@ -15,6 +15,7 @@ $ npm install
 ```bash
 > Create a env file
 > Paste: MONGO_URI= YOUR_MONGO_URI
+> Paste: JWT_SECRET=YOUR_SECRET
 ```
 
 ### Start the server

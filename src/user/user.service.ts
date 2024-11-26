@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcrpt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponseType, createApiResponse } from 'src/utils/response.util';
@@ -12,6 +13,7 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto): Promise<ApiResponseType> {
     try {
+      createUserDto.password = await bcrpt.hash(createUserDto.password, 10);
       const user = new this.userModel({ ...createUserDto });
       return createApiResponse({
         statusCode: 201,
@@ -36,6 +38,10 @@ export class UserService {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).select('+password');
   }
 
   async updateUser(
