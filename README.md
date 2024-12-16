@@ -16,6 +16,8 @@ $ npm install
 > Create a env file
 > Paste: MONGO_URI= YOUR_MONGO_URI
 > Paste: JWT_SECRET=YOUR_SECRET
+> Paste: SWAGGER_USERNAME=YOUR_USERNAME
+> Paste: SWAGGER_PASSWORD=YOUR_PASSWORD
 ```
 
 ### Start the server
